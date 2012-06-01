@@ -1,40 +1,57 @@
-var Carousel = function(holder){
+log = console.log;
+
+var Carousel = function(holder, items){
 	this.holder = jQuery(holder);
-	this.items  = this.holder.find('.b-carousel__item');
-	this.width  = this.holder.innerWidth();
-	this.itemWidth = 125;
+	this.items  = jQuery(items);
+	this._initBlocks();
 	this._initButtons();
 };
 Carousel.prototype = {
-	LENGTH: 5,
+	//constants
 	ANIMATE_TIME: 1000,
-	pushItems: function(newItems){
-		this.items = jQuery.merge(this.items, newItems);
-		var itemsHolder = this.holder.find('.b-carousel__items-holder');
-		for(var i = 0; i < this.LENGTH; i++){
-			itemsHolder.append(this.items[i]);
-		}
-		this.items  = this.holder.find('.b-carousel__item');
-		this._initBlocks();
+	TEMPLATES: {
+		itemsHolder: '<div class="b-carousel__items-holder"></div>',
+		prevButt: '<button class="b-carousel__button '+
+								'b-carousel__button_action_prev">Prev</button>',
+		nextButt: '<button class="b-carousel__button '+
+								'b-carousel__button_action_next">Next</button>'
 	},
+	//private methods
 	_initBlocks: function(){
-		this.items.each((function(i, el){
-			jQuery(el).css('left', i*this.itemWidth + 'px');
-			console.log(i);
-		}).bind(this));
+		this.itemsHolder = jQuery(this.TEMPLATES.itemsHolder);
+		this.prevButt    = jQuery(this.TEMPLATES.prevButt);
+		this.nextButt    = jQuery(this.TEMPLATES.nextButt);
+		this.holder.append(this.prevButt)
+							 .append(this.itemsHolder)
+							 .append(this.nextButt);
+		this._findLength();
+		for(var i = 0; i < this.length; i++){
+			var el   = this.items[i];
+			if(i === 0) {
+				el.css('left', this.margin + 'px');
+				continue;
+			}
+			var left = i*(this.itemWidth+this.margin) + this.margin;
+			log(left);
+			el.css('left', left + 'px');
+			this.itemsHolder.append(el);
+		}
+	},
+	_findLength: function(){
+		this.itemsHolder.append(this.items[0]);
+		this.itemWidth = this.items[0].outerWidth(true);
+		var itHolWidth = this.itemsHolder.width();
+		this.length    = Math.floor(itHolWidth/this.itemWidth);
+		var blocks     = this.itemWidth * this.length;
+		this.margin    = Math.floor((itHolWidth-blocks)/(this.length+1));
 	},
 	_initButtons: function(){
-		console.log(this);
 		var prev = this.holder.find('.b-carousel__button_action_prev');
 		var next = this.holder.find('.b-carousel__button_action_next');
-		console.log('ololo');
 		prev.bind('click', this._prev.bind(this));
-		console.log('cont');
 		next.bind('click', this._next.bind(this));
-		console.log('cont2');
 	},
 	_next: function(){
-		console.log('ohoh');
 		this._move(1);
 	},
 	_prev: function(){
@@ -49,9 +66,8 @@ Carousel.prototype = {
 
 (function(){
 	var App = function(){
-		this.carousel = new Carousel('.b-carousel');
 		var items = this._getGallery();
-		this.carousel.pushItems(items);
+		this.carousel = new Carousel('.b-carousel', items);
 	}
 	App.prototype = {
 		_getGallery: function(){
