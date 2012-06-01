@@ -6,7 +6,7 @@
 	<script type="text/javascript" src="carousel.js"></script>
 	<style type="text/css">
 		.b-carousel{
-			width:800px;
+			width:770px;
 			padding:20px;
 			background-color:#ccc;
 			overflow:hidden;
@@ -15,18 +15,24 @@
 			float:left;
 		}
 		.b-carousel__items-holder{
+			position:relative;
 			float:left;
 			overflow:hidden;
 			width:600px;
-			padding:25px;
+			height:100px;
+			padding:25px 0;
 			background-color:#999;
 		}
 		.b-carousel__item{
+			position:absolute;
 			float:left;
 			width:100px;
 			height:100px;
-			margin-left:25px;
+			margin-right:25px;
 			background-color:#444;
+		}
+		.b-carousel__item_position_last{
+			margin:0;
 		}
 	</style>
 	</head>
@@ -39,6 +45,7 @@
 				<div class="b-carousel__item"></div>
 				<div class="b-carousel__item"></div>
 				<div class="b-carousel__item"></div>
+				<div class="b-carousel__item b-carousel__item_position_last"></div>
 			</div>
 			<button class="b-carousel__button b-carousel__button_action_next">Next</button>
 		</div>
