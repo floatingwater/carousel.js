@@ -12,9 +12,9 @@ Carousel.prototype = {
 	TEMPLATES: {
 		itemsHolder: '<div class="b-carousel__items-holder"></div>',
 		prevButt: '<button class="b-carousel__button '+
-								'b-carousel__button_action_prev">Prev</button>',
+		          'b-carousel__button_action_prev">Prev</button>',
 		nextButt: '<button class="b-carousel__button '+
-								'b-carousel__button_action_next">Next</button>'
+		          'b-carousel__button_action_next">Next</button>'
 	},
 	//private methods
 	_initBlocks: function(){
@@ -22,28 +22,32 @@ Carousel.prototype = {
 		this.prevButt    = jQuery(this.TEMPLATES.prevButt);
 		this.nextButt    = jQuery(this.TEMPLATES.nextButt);
 		this.holder.append(this.prevButt)
-							 .append(this.itemsHolder)
-							 .append(this.nextButt);
-		this._findLength();
-		for(var i = 0; i < this.length; i++){
+		           .append(this.itemsHolder)
+		           .append(this.nextButt);
+		this._setBlocks();
+		
+	},
+	_setBlocks: function(){
+		var item       = this.items[0];
+		this.itemsHolder.append(item);
+		var width      = item.width();
+		var marginL    = parseInt(item.css('marginLeft'));
+		var marginR    = parseInt(item.css('marginRight'));
+		var outerWidth = width + marginL + marginR;
+		log([outerWidth, width, marginL, marginR]);
+		var itHolWidth = this.itemsHolder.width();
+		this.length    = Math.floor(itHolWidth/outerWidth);
+		var blocks     = outerWidth * this.length;
+		var margin     = Math.floor((itHolWidth-blocks)/(this.length*2));
+		log('margin = '+ margin);
+		item.css('left',  margin + 'px');
+		for(var i = 1; i < this.length; i++){
 			var el   = this.items[i];
-			if(i === 0) {
-				el.css('left', this.margin + 'px');
-				continue;
-			}
-			var left = i*(this.itemWidth+this.margin) + this.margin;
+			var left = i*(outerWidth + margin*2) + margin ;
 			log(left);
 			el.css('left', left + 'px');
 			this.itemsHolder.append(el);
 		}
-	},
-	_findLength: function(){
-		this.itemsHolder.append(this.items[0]);
-		this.itemWidth = this.items[0].outerWidth(true);
-		var itHolWidth = this.itemsHolder.width();
-		this.length    = Math.floor(itHolWidth/this.itemWidth);
-		var blocks     = this.itemWidth * this.length;
-		this.margin    = Math.floor((itHolWidth-blocks)/(this.length+1));
 	},
 	_initButtons: function(){
 		var prev = this.holder.find('.b-carousel__button_action_prev');
