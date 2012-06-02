@@ -37,13 +37,15 @@ Carousel.prototype = {
 		log([outerWidth, width, marginL, marginR]);
 		var itHolWidth = this.itemsHolder.width();
 		this.length    = Math.floor(itHolWidth/outerWidth);
-		var blocks     = outerWidth * this.length;
-		var margin     = Math.floor((itHolWidth-blocks)/(this.length*2));
+		var blocks     = outerWidth * this.length - marginR;//last block margin-right
+		log('hol-wid = '+itHolWidth);
+		log('b-w = '+blocks);
+		var margin     = Math.round((itHolWidth-blocks)/(this.length-1));
 		log('margin = '+ margin);
-		item.css('left',  margin + 'px');
+		item.css('left',  '0px');
 		for(var i = 1; i < this.length; i++){
 			var el   = this.items[i];
-			var left = i*(outerWidth + margin*2) + margin ;
+			var left = i*(outerWidth + margin) ;
 			log(left);
 			el.css('left', left + 'px');
 			this.itemsHolder.append(el);
