@@ -58,19 +58,15 @@ Carousel.prototype = {
 	},
 	_queue: (function(){
 		var queueAr  = [];
-		var flag    = false;
 		var dequeue = function(){
 			queueAr.splice(0,1);
-			if(queueAr.length === 0){
-				flag = false;
-			}else{
+			if(queueAr.length > 0){
 				queueAr[0].func(queueAr[0].args, dequeue);
 			}
 		};
 		return function(func, args){
-			if(!flag){
+			if(queueAr.length === 0){
 				func(args, dequeue);
-				flag = true;
 			}
 			queueAr.push({
 				func: func,
@@ -92,8 +88,8 @@ Carousel.prototype = {
 				if(shift < 0){
 					this.viewItems.first().remove();
 					this.viewItems.splice(0, 1);
-					this.firstI = this.firstI == (this.items.length - 1) ? 0 : ++this.firstI;
-					this.lastI  = this.lastI == (this.items.length - 1) ? 0 : ++this.lastI;
+					this.firstI = this.firstI === this.items.length - 1 ? 0 : ++this.firstI;
+					this.lastI  = this.lastI === this.items.length - 1 ? 0 : ++this.lastI;
 					var item    = this.viewItems.last();
 					var newIt   = this.items[this.lastI];
 					var left    = parseInt(item.css('left'));
