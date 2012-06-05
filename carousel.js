@@ -1,4 +1,3 @@
-log = console.log;
 var Carousel = function(holder, items){
 	this.holder    = jQuery(holder);
 	this.items     = jQuery(items);
@@ -51,10 +50,10 @@ Carousel.prototype = {
 		this.viewItems = jQuery(this.viewItems);
 	},
 	_initButtons: function(){
-		var prev = this.holder.find('.b-carousel__button_action_prev');
-		var next = this.holder.find('.b-carousel__button_action_next');
-		prev.bind('click', this._queue.bind(null, this._move.bind(this), this.SHIFT));
-		next.bind('click', this._queue.bind(null, this._move.bind(this), -this.SHIFT));
+		this.prevButt.bind('click', 
+		                   this._queue.bind(null, this._move.bind(this), this.SHIFT));
+		this.nextButt.bind('click', 
+		                   this._queue.bind(null, this._move.bind(this), -this.SHIFT));
 	},
 	_queue: (function(){
 		var queueAr  = [];
