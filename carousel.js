@@ -75,7 +75,7 @@ Carousel.prototype = {
 	})(),
 	_move: function(shift, callback){
 		this.viewItems.animate({
-			left: (shift < 0 ? '-=' : '+=') + Math.abs(this.viewShift*this.SHIFT),
+			'left': (shift < 0 ? '-=' : '+=') + Math.abs(this.viewShift*this.SHIFT)
 		}, this.ANIMATE_TIME, this._changeItems.bind(this, shift, callback));
 	},
 	_changeItems: (function(){
@@ -127,9 +127,31 @@ Carousel.prototype = {
 				items.push(div);
 			}
 			return items;
-		},
+		}
 	}
 	jQuery(function(){
 		new App();
 	});
 }());
+//bind function
+if (!Function.prototype.bind) {
+	Function.prototype.bind = function (oThis) {
+		if (typeof this !== "function") {
+			// closest thing possible to the ECMAScript 5 internal IsCallable function
+			throw new TypeError("Function.prototype.bind - what is"+
+			                    "trying to be bound is not callable");
+		}
+		var aArgs = Array.prototype.slice.call(arguments, 1),
+				fToBind = this,
+				fNOP = function () {},
+				fBound = function () {
+					return fToBind.apply(this instanceof fNOP
+					                       ? this
+					                       : oThis || window,
+					                     aArgs.concat(Array.prototype.slice.call(arguments)));
+				};
+		fNOP.prototype = this.prototype;
+		fBound.prototype = new fNOP();
+		return fBound;
+	};
+}
